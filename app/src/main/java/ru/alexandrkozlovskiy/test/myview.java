@@ -21,8 +21,6 @@ private class myProvider extends AccessibilityNodeProvider {
 @Override
     public AccessibilityNodeInfo createAccessibilityNodeInfo(int virtualViewId) {
         if(virtualViewId== View.NO_ID) {
-            int[] pos= {0,0};
-            getLocationOnScreen(pos);
             AccessibilityNodeInfo info = AccessibilityNodeInfo.obtain(myview.this);
             onInitializeAccessibilityNodeInfo(info);
             info.setContentDescription("Test of parent view");
@@ -36,16 +34,17 @@ info.setSource(myview.this,virtualViewId);
 info.setParent(myview.this);
 info.setPackageName(getContext().getPackageName());
 info.setClassName(TextView.class.getName());
-int[] pos= {0,0};
+int[] pos= {0,0,0,0};
 getLocationOnScreen(pos);
-//info.setBoundsInParent(new Rect(pos[0],pos[1],pos[0],pos[1]));
-info.setBoundsInScreen(new Rect(pos[0]+getLeft()*(virtualViewId+1),pos[1]+getTop()*(virtualViewId+1),pos[0]+getRight()*(virtualViewId+1),pos[1]+getBottom()*(virtualViewId+1)));
+//info.setBoundsInParent(new Rect(pos[0],pos[1],pos[2],pos[3]));
+info.setBoundsInScreen(new Rect(pos[0]+getLeft(),pos[1]+getTop(),pos[2]+getRight(),pos[3]+getBottom()));
 info.setVisibleToUser(true);
 info.setImportantForAccessibility(true);
 info.setEnabled(true);
 info.setFocusable(true);
 info.setFocused(true);
 info.addAction(AccessibilityNodeInfo.ACTION_CLICK);
+info.addAction(AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS);
             info.setContentDescription("test of child view "+virtualViewId);
 //announceForAccessibility(virtualViewId+" "+info);
 return info;
@@ -54,16 +53,18 @@ return info;
 
     @Override
     public boolean performAction(int virtualViewId, int action, Bundle arguments) {
-if(action==AccessibilityNodeInfo.ACTION_CLICK ||action==AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS) {
-    AccessibilityEvent event = AccessibilityEvent.obtain(action == AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS ? AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED : AccessibilityEvent.TYPE_VIEW_CLICKED);
-    if (action == AccessibilityNodeInfo.ACTION_CLICK) announceForAccessibility(virtualViewId + "");
+    //if we will use string below,talkback will announce contentDescription and type of parent view,when we swipe right,but when we svipe left from child view,nothing will be announce. If we will comment line bellow,talkback will not announce contentDescription and element type of parent and child view. So,to reproduce official telegram client issue,uncomment line below.
+        //if(virtualViewId==NO_ID) return performAccessibilityAction(action,arguments);
+if(action==AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS) {
+    AccessibilityEvent event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
     event.setPackageName(getContext().getPackageName());
     event.setSource(myview.this, virtualViewId);
-if(action==AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS) getParent().requestSendAccessibilityEvent(myview.this, event);
-    return action == AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS ? true : false;
-}
+    getParent().requestSendAccessibilityEvent(myview.this, event);
+return true;
+    }
+else if(action ==AccessibilityNodeInfo.ACTION_CLICK) announceForAccessibility("virtual view id is "+virtualViewId+".");
 return super.performAction(virtualViewId,action,arguments);
-}
+    }
 }
 public myview(Context context) {
         super(context);
