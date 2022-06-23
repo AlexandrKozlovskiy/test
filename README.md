@@ -1,12 +1,19 @@
 # test
-This is a test repository,which shows telegram issue.
-# steps to reproduce
-1. Open official telegram client for android.
-2. Open some group or channel,which have at least one voice message.
-3. find this voice message (talkback will announce it and type of element as seekbar)
-4. swipe right from it,and after focusing on share button swipe left.
-5. talkback will not announce nothing,but with jieshuo screenreader all ok.
 
-This problem exists with talkback 9.1 android 10 xiaomi redmi note 9 s miui 12.03. In previous versions of talkback and miui problem exists too.
+This is a test repository,which shows two issues of clickable spans with talkback.
 
-So i opened telegram sources,found how in it creates virtual view structure,and did the app,which demonstrates this issue.
+## steps to reproduce
+
+1. Compile and run this app,when talkback is running.
+2. focus on view with text "test of clickable span".
+3. Go to talkback menue/links and do double tab on a link.
+4. sure,what nothing happens,and no toast appear.
+
+This problem exists with talkback 12.2 android 11 xiaomi redmi note 9 s miui 12.05.
+
+## Steps to reproduce the second issue
+
+1. Open class myview java.
+2. replace info.setText on info.setContentDescription.
+3. compile and run app,when talkback is running.
+4. focus on view with text "test of clickable span" and sure,what no links here.
