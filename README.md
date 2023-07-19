@@ -1,19 +1,14 @@
 # test
 
-This is a test repository,which shows two issues of clickable spans with talkback.
+This is a branch,which demonstrate  crash of talkback,if we have URLSpan and if activities,which can open the link,have android:exported="false".
 
 ## steps to reproduce
 
 1. Compile and run this app,when talkback is running.
 2. focus on view with text "test of clickable span".
 3. Go to talkback menue/links and do double tab on a link.
-4. sure,what nothing happens,and no toast appear.
+4. Sure,what talkvack crashed,so blind user should reboot device,or call sighted person,to rerun talkback.
 
-This problem exists with talkback 12.2 android 11 xiaomi redmi note 9 s miui 12.05.
+Also please try comment or delete line 52 in file CustomView.java,i.e not set contentDescription for node. In this case it calls method onClick of URLSpan object. Whether it's issue of talkback or framework?
 
-## Steps to reproduce the second issue
-
-1. Open class myview java.
-2. replace info.setText on info.setContentDescription.
-3. compile and run app,when talkback is running.
-4. focus on view with text "test of clickable span" and sure,what no links here.
+This problem exists with talkback 14.0 android 12 xiaomi redmi note 9 s miui 14.03.This problem exists with talkback 14.0 android 12 xiaomi redmi note 9 s miui 14.03.

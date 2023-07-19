@@ -11,8 +11,6 @@ public LinearLayout c;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-          setContentView(R.layout.activity_main);
-tv = findViewById(R.id.tv);
-c=findViewById(R.id.c);
+setContentView(R.layout.activity_main);
 }
 }
