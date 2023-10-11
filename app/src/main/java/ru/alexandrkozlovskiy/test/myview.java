@@ -54,7 +54,7 @@ return info;
     @Override
     public boolean performAction(int virtualViewId, int action, Bundle arguments) {
     //if we will use string below,talkback will announce contentDescription and type of parent view,when we swipe right,but when we svipe left from child view,nothing will be announce. If we will comment line bellow,talkback will not announce contentDescription and element type of parent and child view. So,to reproduce official telegram client issue,uncomment line below.
-        //if(virtualViewId==NO_ID) return performAccessibilityAction(action,arguments);
+        if(virtualViewId==NO_ID) return performAccessibilityAction(action,arguments); //Without this string talkback in parent node speak nothing.
 if(action==AccessibilityNodeInfo.ACTION_ACCESSIBILITY_FOCUS) {
     AccessibilityEvent event = AccessibilityEvent.obtain(AccessibilityEvent.TYPE_VIEW_ACCESSIBILITY_FOCUSED);
     event.setPackageName(getContext().getPackageName());
