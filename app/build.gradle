@@ -5,14 +5,10 @@ android {
     namespace 'ru.alexandrkozlovskiy.test'
     signingConfigs {
         release {
-            storeFile file('')
-            storePassword ''
-            keyAlias ''
-            keyPassword ''
         }
     }
-    compileSdkVersion 33
-    buildToolsVersion "33.0.0"
+    compileSdkVersion 34
+    buildToolsVersion "34.0.0"
     defaultConfig {
         applicationId "ru.alexandrkozlovskiy.test"
         minSdkVersion 16
@@ -26,6 +22,23 @@ android {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            def f = file("../keystore.properties")
+            if (f.exists()) {
+                def props = new Properties()
+                f.withInputStream { props.load(it) }
+                signingConfigs.release.storeFile file(props.RELEASE_KEY_PATH)
+                signingConfigs.release.storePassword props.RELEASE_STORE_PASSWORD
+                signingConfigs.release.keyAlias props.RELEASE_KEY_ALIAS
+                signingConfigs.release.keyPassword props.RELEASE_KEY_PASSWORD
+            } else {
+                def writer = new FileWriter(f.path)
+                writer.write("RELEASE_KEY_PATH=\n")
+                writer.write("RELEASE_KEY_PASSWORD=\n")
+                writer.write("RELEASE_KEY_ALIAS=\n")
+                writer.write("RELEASE_STORE_PASSWORD=")
+                writer.close()
+                throw new IOException("File $f.name was created. please fill it by values of your release key.")
+            }
             signingConfig signingConfigs.release
         }
     }
