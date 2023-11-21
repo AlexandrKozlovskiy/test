@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 class CustomView extends TextView {
-    private SpannableStringBuilder sb;
     public CustomView(Context context) {
         this(context,null);
     }
@@ -28,28 +27,14 @@ class CustomView extends TextView {
     public CustomView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         setImportantForAccessibility(IMPORTANT_FOR_ACCESSIBILITY_YES);
-if(sb==null) {
-    sb = new SpannableStringBuilder("Test of clickable span");
-    sb.setSpan(new URLSpan("test://text?text=1") {
-
-        @Override
-        public void onClick(View v) {
-            try {
-                Toast.makeText(getContext(), "Test of clickable span", 1).show();
-            } catch (Exception e) {
-                //setContentDescription(e.toString());
-            }
-        }
-    }, 0, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-}
-setText(sb);
     }
 
     @Override
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo info) {
         super.onInitializeAccessibilityNodeInfo(info);
         info.setClickable(true);
-        info.setContentDescription(sb);
-        //Explain me someone please,why when i set text for this node,and call links via talkback menu and click to some link,it works as ClickableSpan,but when i set contentDescription for this node,using the same text and do the same,talkback recognize link as URLSpan (second case expected behaviour). But i have an example (https://github.com/AlexandrKozlovskiy/orthodoxcalendar/blob/main/app/src/main/java/oleksandr/kotyuk/orthodoxcalendar/fragments/PageFragmentViewPagerDay.java),in which links works as URLSpans even for text.
+        info.setContentDescription("test view"); //If contentDescription or text of node is not null and not empty,jieshuo not read stateDescription,but talkback read.
+        info.setStateDescription("Smoothie");
+        info.getExtras().putCharSequence("AccessibilityNodeInfo.roleDescription","custom role"); //From accessibilityNodeInfoCompat. Jieshuo not read this,but talkback read.
     }
 }
