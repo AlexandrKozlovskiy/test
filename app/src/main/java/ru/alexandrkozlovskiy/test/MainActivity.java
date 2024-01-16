@@ -6,11 +6,12 @@ import android.os.Bundle;
 import android.widget.LinearLayout;
 
 public class MainActivity extends AppCompatActivity {
-public CustomView tv;
-public LinearLayout c;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        long ms=System.currentTimeMillis();
 setContentView(R.layout.activity_main);
+ms=System.currentTimeMillis()-ms;
+setTitle(ms+"");
 }
 }
